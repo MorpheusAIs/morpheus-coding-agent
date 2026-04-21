@@ -94,8 +94,8 @@ export async function POST(request: NextRequest) {
     after(async () => {
       try {
         // Check if AI Gateway API key is available
-        if (!process.env.AI_GATEWAY_API_KEY) {
-          console.log('AI_GATEWAY_API_KEY not available, skipping AI branch name generation')
+        if (!process.env.MORPHEUS_API_KEY) {
+          console.log('MORPHEUS_API_KEY not available, skipping AI branch name generation')
           return
         }
 
@@ -158,8 +158,8 @@ export async function POST(request: NextRequest) {
     after(async () => {
       try {
         // Check if AI Gateway API key is available
-        if (!process.env.AI_GATEWAY_API_KEY) {
-          console.log('AI_GATEWAY_API_KEY not available, skipping AI title generation')
+        if (!process.env.MORPHEUS_API_KEY) {
+          console.log('MORPHEUS_API_KEY not available, skipping AI title generation')
           return
         }
 
@@ -263,8 +263,7 @@ async function processTaskWithTimeout(
     OPENAI_API_KEY?: string
     GEMINI_API_KEY?: string
     CURSOR_API_KEY?: string
-    ANTHROPIC_API_KEY?: string
-    AI_GATEWAY_API_KEY?: string
+    MORPHEUS_API_KEY?: string
   },
   githubToken?: string | null,
   githubUser?: {
@@ -377,8 +376,7 @@ async function processTask(
     OPENAI_API_KEY?: string
     GEMINI_API_KEY?: string
     CURSOR_API_KEY?: string
-    ANTHROPIC_API_KEY?: string
-    AI_GATEWAY_API_KEY?: string
+    MORPHEUS_API_KEY?: string
   },
   githubToken?: string | null,
   githubUser?: {
@@ -648,7 +646,7 @@ async function processTask(
           // Ignore URL parsing errors
         }
 
-        if (process.env.AI_GATEWAY_API_KEY) {
+        if (process.env.MORPHEUS_API_KEY) {
           commitMessage = await generateCommitMessage({
             description: prompt,
             repoName,

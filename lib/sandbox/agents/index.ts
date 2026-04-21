@@ -27,8 +27,7 @@ export async function executeAgentInSandbox(
     OPENAI_API_KEY?: string
     GEMINI_API_KEY?: string
     CURSOR_API_KEY?: string
-    ANTHROPIC_API_KEY?: string
-    AI_GATEWAY_API_KEY?: string
+    MORPHEUS_API_KEY?: string
   },
   isResumed?: boolean,
   sessionId?: string,
@@ -58,8 +57,7 @@ export async function executeAgentInSandbox(
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     CURSOR_API_KEY: process.env.CURSOR_API_KEY,
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
-    AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
+    MORPHEUS_API_KEY: process.env.MORPHEUS_API_KEY,
     GH_TOKEN: process.env.GH_TOKEN,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   }
@@ -67,8 +65,7 @@ export async function executeAgentInSandbox(
   if (apiKeys?.OPENAI_API_KEY) process.env.OPENAI_API_KEY = apiKeys.OPENAI_API_KEY
   if (apiKeys?.GEMINI_API_KEY) process.env.GEMINI_API_KEY = apiKeys.GEMINI_API_KEY
   if (apiKeys?.CURSOR_API_KEY) process.env.CURSOR_API_KEY = apiKeys.CURSOR_API_KEY
-  if (apiKeys?.ANTHROPIC_API_KEY) process.env.ANTHROPIC_API_KEY = apiKeys.ANTHROPIC_API_KEY
-  if (apiKeys?.AI_GATEWAY_API_KEY) process.env.AI_GATEWAY_API_KEY = apiKeys.AI_GATEWAY_API_KEY
+  if (apiKeys?.MORPHEUS_API_KEY) process.env.MORPHEUS_API_KEY = apiKeys.MORPHEUS_API_KEY
   if (githubToken) {
     process.env.GH_TOKEN = githubToken
     process.env.GITHUB_TOKEN = githubToken
@@ -151,8 +148,7 @@ export async function executeAgentInSandbox(
     process.env.OPENAI_API_KEY = originalEnv.OPENAI_API_KEY
     process.env.GEMINI_API_KEY = originalEnv.GEMINI_API_KEY
     process.env.CURSOR_API_KEY = originalEnv.CURSOR_API_KEY
-    process.env.ANTHROPIC_API_KEY = originalEnv.ANTHROPIC_API_KEY
-    process.env.AI_GATEWAY_API_KEY = originalEnv.AI_GATEWAY_API_KEY
+    process.env.MORPHEUS_API_KEY = originalEnv.MORPHEUS_API_KEY
     process.env.GH_TOKEN = originalEnv.GH_TOKEN
     process.env.GITHUB_TOKEN = originalEnv.GITHUB_TOKEN
   }

@@ -128,8 +128,7 @@ async function continueTask(
     OPENAI_API_KEY?: string
     GEMINI_API_KEY?: string
     CURSOR_API_KEY?: string
-    ANTHROPIC_API_KEY?: string
-    AI_GATEWAY_API_KEY?: string
+    MORPHEUS_API_KEY?: string
   },
   githubToken?: string | null,
   githubUser?: {
@@ -378,7 +377,7 @@ async function continueTask(
           // Ignore URL parsing errors
         }
 
-        if (process.env.AI_GATEWAY_API_KEY) {
+        if (process.env.MORPHEUS_API_KEY) {
           commitMessage = await generateCommitMessage({
             description: prompt,
             repoName,

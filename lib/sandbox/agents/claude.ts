@@ -83,9 +83,9 @@ export async function installClaudeCLI(
   if (claudeInstall.success) {
     await logger.info('Claude CLI installed successfully')
 
-    // Authenticate Claude CLI with API key (using AI Gateway)
-    const apiKey = process.env.AI_GATEWAY_API_KEY
-    const baseUrl = 'https://ai-gateway.vercel.sh'
+    // Authenticate Claude CLI with API key (using Morpheus Inference API)
+    const apiKey = process.env.MORPHEUS_API_KEY
+    const baseUrl = process.env.MORPHEUS_BASE_URL || 'https://api.mor.org/api/v1'
 
     if (apiKey) {
       await logger.info('Authenticating Claude CLI with AI Gateway...')
@@ -104,7 +104,7 @@ export async function installClaudeCLI(
 
           if (server.type === 'local') {
             // Local STDIO server - command string contains both executable and args
-            const envPrefix = `ANTHROPIC_API_KEY="${apiKey}" ANTHROPIC_BASE_URL="${baseUrl}"`
+            const envPrefix = `MORPHEUS_API_KEY="${apiKey}" MORPHEUS_BASE_URL="${baseUrl}"`
             let addMcpCmd = `${envPrefix} claude mcp add "${serverName}" -- ${server.command}`
 
             // Add env vars if provided
@@ -125,7 +125,7 @@ export async function installClaudeCLI(
             }
           } else {
             // Remote HTTP/SSE server
-            const envPrefix = `ANTHROPIC_API_KEY="${apiKey}" ANTHROPIC_BASE_URL="${baseUrl}"`
+            const envPrefix = `MORPHEUS_API_KEY="${apiKey}" MORPHEUS_BASE_URL="${baseUrl}"`
             let addMcpCmd = `${envPrefix} claude mcp add --transport http "${serverName}" "${server.baseUrl}"`
 
             if (server.oauthClientSecret) {
@@ -148,7 +148,7 @@ export async function installClaudeCLI(
         }
       }
 
-      const modelToUse = selectedModel || 'claude-sonnet-4-5'
+      const modelToUse = selectedModel || 'qwen3-coder-480b-a35b-instruct'
       const configFileCmd = `mkdir -p $HOME/.config/claude && cat > $HOME/.config/claude/config.json << 'EOF'
 {
   "api_key": "${apiKey}",
@@ -167,7 +167,7 @@ EOF`
       // Verify authentication
       const verifyAuth = await runCommandInSandbox(sandbox, 'sh', [
         '-c',
-        `ANTHROPIC_API_KEY=${apiKey} ANTHROPIC_BASE_URL=${baseUrl} claude --version`,
+        `MORPHEUS_API_KEY=${apiKey} MORPHEUS_BASE_URL=${baseUrl} claude --version`,
       ])
       if (verifyAuth.success) {
         await logger.info('Claude CLI authentication verified')
@@ -175,7 +175,7 @@ EOF`
         await logger.info('Warning: Claude CLI authentication could not be verified')
       }
     } else {
-      await logger.info('Warning: AI_GATEWAY_API_KEY not found, Claude CLI may not work')
+      await logger.info('Warning: MORPHEUS_API_KEY not found, Claude CLI may not work')
     }
 
     return { success: true }
@@ -237,26 +237,26 @@ export async function executeClaudeInSandbox(
       }
     }
 
-    // Check if AI_GATEWAY_API_KEY is available
-    if (!process.env.AI_GATEWAY_API_KEY) {
+    // Check if MORPHEUS_API_KEY is available
+    if (!process.env.MORPHEUS_API_KEY) {
       return {
         success: false,
-        error: 'AI_GATEWAY_API_KEY environment variable is required but not found',
+        error: 'MORPHEUS_API_KEY environment variable is required but not found',
         cliName: 'claude',
         changesDetected: false,
       }
     }
 
     // Log what we're trying to do
-    const modelToUse = selectedModel || 'claude-sonnet-4-5'
+    const modelToUse = selectedModel || 'qwen3-coder-480b-a35b-instruct'
     if (logger) {
       await logger.info('Attempting to execute Claude CLI...')
     }
 
     // Check MCP configuration status
-    const aiGatewayKey = process.env.AI_GATEWAY_API_KEY!
-    const aiGatewayBaseUrl = 'https://ai-gateway.vercel.sh'
-    const envPrefix = `ANTHROPIC_API_KEY="${aiGatewayKey}" ANTHROPIC_BASE_URL="${aiGatewayBaseUrl}"`
+    const morpheusApiKey = process.env.MORPHEUS_API_KEY!
+    const morpheusBaseUrl = process.env.MORPHEUS_BASE_URL || 'https://api.mor.org/api/v1'
+    const envPrefix = `MORPHEUS_API_KEY="${morpheusApiKey}" MORPHEUS_BASE_URL="${morpheusBaseUrl}"`
     const mcpList = await runCommandInSandbox(sandbox, 'sh', ['-c', `${envPrefix} claude mcp list`])
     await logger.info('MCP servers list retrieved')
     if (mcpList.error) {
@@ -299,7 +299,7 @@ export async function executeClaudeInSandbox(
     }
 
     // Log the command we're about to execute (with redacted API key)
-    const redactedCommand = fullCommand.replace(aiGatewayKey, '[REDACTED]')
+    const redactedCommand = fullCommand.replace(morpheusApiKey, '[REDACTED]')
     await logger.command(redactedCommand)
 
     // Set up streaming output capture if we have an agent message

@@ -72,26 +72,26 @@ const CODING_AGENTS = [
 // Model options for each agent
 const AGENT_MODELS = {
   claude: [
-    { value: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
-    { value: 'anthropic/claude-opus-4.6', label: 'Opus 4.6' },
-    { value: 'claude-haiku-4-5', label: 'Haiku 4.5' },
+    { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
+    { value: 'kimi-k2.5', label: 'Kimi K2.5' },
+    { value: 'kimi-k2-thinking', label: 'Kimi K2 Thinking' },
+    { value: 'glm-5', label: 'GLM-5' },
+    { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
+    { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
+    { value: 'qwen3-235b', label: 'Qwen3 235B' },
   ],
   codex: [
-    { value: 'openai/gpt-5.1', label: 'GPT-5.1' },
-    { value: 'openai/gpt-5.1-codex', label: 'GPT-5.1-Codex' },
-    { value: 'openai/gpt-5.1-codex-mini', label: 'GPT-5.1-Codex mini' },
-    { value: 'openai/gpt-5', label: 'GPT-5' },
-    { value: 'gpt-5-codex', label: 'GPT-5-Codex' },
-    { value: 'openai/gpt-5-mini', label: 'GPT-5 mini' },
-    { value: 'openai/gpt-5-nano', label: 'GPT-5 nano' },
-    { value: 'gpt-5-pro', label: 'GPT-5 pro' },
-    { value: 'openai/gpt-4.1', label: 'GPT-4.1' },
+    { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
+    { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
+    { value: 'glm-5', label: 'GLM-5' },
+    { value: 'kimi-k2.5', label: 'Kimi K2.5' },
+    { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
+    { value: 'qwen3-235b', label: 'Qwen3 235B' },
   ],
   copilot: [
-    { value: 'claude-sonnet-4.5', label: 'Sonnet 4.5' },
-    { value: 'claude-sonnet-4', label: 'Sonnet 4' },
-    { value: 'claude-haiku-4.5', label: 'Haiku 4.5' },
-    { value: 'gpt-5', label: 'GPT-5' },
+    { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
+    { value: 'kimi-k2.5', label: 'Kimi K2.5' },
+    { value: 'glm-5', label: 'GLM-5' },
   ],
   cursor: [
     { value: 'auto', label: 'Auto' },
@@ -110,50 +110,41 @@ const AGENT_MODELS = {
     { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
   ],
   opencode: [
-    { value: 'gpt-5', label: 'GPT-5' },
-    { value: 'gpt-5-mini', label: 'GPT-5 mini' },
-    { value: 'gpt-5-nano', label: 'GPT-5 nano' },
-    { value: 'gpt-4.1', label: 'GPT-4.1' },
-    { value: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
-    { value: 'claude-opus-4-5', label: 'Opus 4.5' },
-    { value: 'claude-haiku-4-5', label: 'Haiku 4.5' },
+    { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
+    { value: 'kimi-k2.5', label: 'Kimi K2.5' },
+    { value: 'kimi-k2-thinking', label: 'Kimi K2 Thinking' },
+    { value: 'glm-5', label: 'GLM-5' },
+    { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
+    { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
+    { value: 'qwen3-235b', label: 'Qwen3 235B' },
   ],
 } as const
 
 // Default models for each agent
 const DEFAULT_MODELS = {
-  claude: 'claude-sonnet-4-5',
-  codex: 'openai/gpt-5.1',
-  copilot: 'claude-sonnet-4.5',
+  claude: 'qwen3-coder-480b-a35b-instruct',
+  codex: 'qwen3-coder-480b-a35b-instruct',
+  copilot: 'qwen3-coder-480b-a35b-instruct',
   cursor: 'auto',
   gemini: 'gemini-3-pro-preview',
-  opencode: 'gpt-5',
+  opencode: 'qwen3-coder-480b-a35b-instruct',
 } as const
 
 // API key requirements for each agent
 const AGENT_API_KEY_REQUIREMENTS: Record<string, Provider[]> = {
-  claude: ['anthropic'],
-  codex: ['aigateway'], // Uses AI Gateway for OpenAI proxy
+  claude: ['morpheus'],
+  codex: ['morpheus'],
   copilot: [], // Uses user's GitHub account token automatically
   cursor: ['cursor'],
   gemini: ['gemini'],
-  opencode: [], // Will be determined dynamically based on selected model
+  opencode: ['morpheus'],
 }
 
-type Provider = 'openai' | 'gemini' | 'cursor' | 'anthropic' | 'aigateway'
+type Provider = 'openai' | 'gemini' | 'cursor' | 'morpheus'
 
 // Helper to determine which API key is needed for opencode based on model
 const getOpenCodeRequiredKeys = (model: string): Provider[] => {
-  // Check if it's an Anthropic model (claude models)
-  if (model.includes('claude') || model.includes('sonnet') || model.includes('opus')) {
-    return ['anthropic']
-  }
-  // Check if it's an OpenAI/GPT model (uses AI Gateway)
-  if (model.includes('gpt')) {
-    return ['aigateway']
-  }
-  // Fallback to both if we can't determine
-  return ['aigateway', 'anthropic']
+  return ['morpheus']
 }
 
 export function TaskForm({
@@ -363,11 +354,10 @@ export function TaskForm({
         if (!data.hasKey) {
           // Show error message with provider name
           const providerNames: Record<string, string> = {
-            anthropic: 'Anthropic',
+            morpheus: 'Morpheus',
             openai: 'OpenAI',
             cursor: 'Cursor',
             gemini: 'Gemini',
-            aigateway: 'AI Gateway',
           }
           const providerName = providerNames[data.provider] || data.provider
 
@@ -398,7 +388,7 @@ export function TaskForm({
   return (
     <div className="w-full max-w-2xl">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Coding Agent Template</h1>
+        <h1 className="text-4xl font-bold mb-4">Morpheus Coding Agent</h1>
         <p className="text-lg text-muted-foreground mb-2">
           Multi-agent AI coding platform powered by{' '}
           <a
@@ -411,12 +401,12 @@ export function TaskForm({
           </a>{' '}
           and{' '}
           <a
-            href="https://vercel.com/docs/ai-gateway"
+            href="https://apidocs.mor.org"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:no-underline"
           >
-            AI Gateway
+            Morpheus Inference API
           </a>
         </p>
       </div>

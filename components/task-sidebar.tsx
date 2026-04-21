@@ -30,26 +30,20 @@ import { PRCheckStatus } from '@/components/pr-check-status'
 import { githubConnectionAtom } from '@/lib/atoms/github-connection'
 
 // Model mappings for human-friendly names
+const MORPHEUS_MODELS = [
+  { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B' },
+  { value: 'kimi-k2.5', label: 'Kimi K2.5' },
+  { value: 'kimi-k2-thinking', label: 'Kimi K2 Thinking' },
+  { value: 'glm-5', label: 'GLM-5' },
+  { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
+  { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
+  { value: 'qwen3-235b', label: 'Qwen3 235B' },
+]
+
 const AGENT_MODELS = {
-  claude: [
-    { value: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
-    { value: 'anthropic/claude-opus-4.6', label: 'Opus 4.6' },
-    { value: 'claude-haiku-4-5', label: 'Haiku 4.5' },
-  ],
-  codex: [
-    { value: 'openai/gpt-5', label: 'GPT-5' },
-    { value: 'gpt-5-codex', label: 'GPT-5-Codex' },
-    { value: 'openai/gpt-5-mini', label: 'GPT-5 mini' },
-    { value: 'openai/gpt-5-nano', label: 'GPT-5 nano' },
-    { value: 'gpt-5-pro', label: 'GPT-5 pro' },
-    { value: 'openai/gpt-4.1', label: 'GPT-4.1' },
-  ],
-  copilot: [
-    { value: 'claude-sonnet-4.5', label: 'Sonnet 4.5' },
-    { value: 'claude-sonnet-4', label: 'Sonnet 4' },
-    { value: 'claude-haiku-4.5', label: 'Haiku 4.5' },
-    { value: 'gpt-5', label: 'GPT-5' },
-  ],
+  claude: MORPHEUS_MODELS,
+  codex: MORPHEUS_MODELS,
+  copilot: MORPHEUS_MODELS,
   cursor: [
     { value: 'auto', label: 'Auto' },
     { value: 'sonnet-4.5', label: 'Sonnet 4.5' },
@@ -64,15 +58,7 @@ const AGENT_MODELS = {
     { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
     { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
   ],
-  opencode: [
-    { value: 'gpt-5', label: 'GPT-5' },
-    { value: 'gpt-5-mini', label: 'GPT-5 Mini' },
-    { value: 'gpt-5-nano', label: 'GPT-5 Nano' },
-    { value: 'gpt-4.1', label: 'GPT-4.1' },
-    { value: 'claude-sonnet-4-5', label: 'Sonnet 4.5' },
-    { value: 'claude-opus-4-5', label: 'Opus 4.5' },
-    { value: 'claude-haiku-4-5', label: 'Haiku 4.5' },
-  ],
+  opencode: MORPHEUS_MODELS,
 } as const
 
 interface TaskSidebarProps {

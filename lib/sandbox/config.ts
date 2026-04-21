@@ -5,23 +5,22 @@ export function validateEnvironmentVariables(
     OPENAI_API_KEY?: string
     GEMINI_API_KEY?: string
     CURSOR_API_KEY?: string
-    ANTHROPIC_API_KEY?: string
-    AI_GATEWAY_API_KEY?: string
+    MORPHEUS_API_KEY?: string
   },
 ) {
   const errors: string[] = []
 
   // Check for required environment variables based on selected agent
-  if (selectedAgent === 'claude' && !apiKeys?.AI_GATEWAY_API_KEY && !process.env.AI_GATEWAY_API_KEY) {
-    errors.push('AI_GATEWAY_API_KEY is required for Claude CLI. Please add your API key in your profile.')
+  if (selectedAgent === 'claude' && !apiKeys?.MORPHEUS_API_KEY && !process.env.MORPHEUS_API_KEY) {
+    errors.push('MORPHEUS_API_KEY is required for Claude CLI. Please add your API key in your profile.')
   }
 
   if (selectedAgent === 'cursor' && !apiKeys?.CURSOR_API_KEY && !process.env.CURSOR_API_KEY) {
     errors.push('CURSOR_API_KEY is required for Cursor CLI. Please add your API key in your profile.')
   }
 
-  if (selectedAgent === 'codex' && !apiKeys?.AI_GATEWAY_API_KEY && !process.env.AI_GATEWAY_API_KEY) {
-    errors.push('AI_GATEWAY_API_KEY is required for Codex CLI. Please add your API key in your profile.')
+  if (selectedAgent === 'codex' && !apiKeys?.MORPHEUS_API_KEY && !process.env.MORPHEUS_API_KEY) {
+    errors.push('MORPHEUS_API_KEY is required for Codex CLI. Please add your API key in your profile.')
   }
 
   if (selectedAgent === 'gemini' && !apiKeys?.GEMINI_API_KEY && !process.env.GEMINI_API_KEY) {
@@ -29,14 +28,12 @@ export function validateEnvironmentVariables(
   }
 
   if (selectedAgent === 'opencode') {
-    // OpenCode can use either AI Gateway (for GPT models) or Anthropic (for Claude models)
-    // We require at least one to be present
-    const hasAiGateway = apiKeys?.AI_GATEWAY_API_KEY || process.env.AI_GATEWAY_API_KEY
-    const hasAnthropic = apiKeys?.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY
+    // OpenCode uses Morpheus Inference API
+    const hasMorpheus = apiKeys?.MORPHEUS_API_KEY || process.env.MORPHEUS_API_KEY
 
-    if (!hasAiGateway && !hasAnthropic) {
+    if (!hasMorpheus) {
       errors.push(
-        'Either AI_GATEWAY_API_KEY or ANTHROPIC_API_KEY is required for OpenCode CLI. Please add at least one API key in your profile.',
+        'MORPHEUS_API_KEY is required for OpenCode CLI. Please add your API key in your profile.',
       )
     }
   }

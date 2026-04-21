@@ -10,8 +10,8 @@ export interface BranchNameOptions {
 export async function generateBranchName(options: BranchNameOptions): Promise<string> {
   const { description, repoName, context } = options
 
-  if (!process.env.AI_GATEWAY_API_KEY) {
-    throw new Error('AI_GATEWAY_API_KEY environment variable is required')
+  if (!process.env.MORPHEUS_API_KEY) {
+    throw new Error('MORPHEUS_API_KEY environment variable is required')
   }
 
   // Create the prompt for branch name generation
@@ -39,7 +39,7 @@ Return ONLY the branch name, nothing else.`
   try {
     // Generate branch name using AI SDK 5 with AI Gateway
     const result = await generateText({
-      model: 'openai/gpt-5-nano',
+      model: 'qwen3-235b',
       prompt,
       temperature: 0.3,
     })

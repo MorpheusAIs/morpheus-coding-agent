@@ -57,8 +57,8 @@ export async function executeOpenCodeInSandbox(
     await logger.info('Starting OpenCode agent execution...')
 
     // Check if we have required environment variables for OpenCode
-    if (!process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-      const errorMsg = 'OpenAI API key or Anthropic API key is required for OpenCode agent'
+    if (!process.env.MORPHEUS_API_KEY) {
+      const errorMsg = 'MORPHEUS_API_KEY is required for OpenCode agent'
       await logger.error(errorMsg)
       return {
         success: false,
@@ -234,51 +234,30 @@ EOF`
       }
     }
 
-    // Set up authentication for OpenCode
-    // OpenCode supports multiple providers, we'll configure the available ones
+    // Set up authentication for OpenCode via Morpheus Inference API (OpenAI-compatible)
     const authSetupCommands: string[] = []
 
-    if (process.env.OPENAI_API_KEY) {
-      console.log('Configuring OpenAI provider...')
+    if (process.env.MORPHEUS_API_KEY) {
+      console.log('Configuring Morpheus provider...')
       if (logger) {
-        await logger.info('Configuring OpenAI provider...')
+        await logger.info('Configuring Morpheus Inference API provider...')
       }
 
-      // Use opencode auth to configure OpenAI
-      const openaiAuthResult = await runCommandInSandbox(sandbox, 'sh', [
+      const morpheusBaseUrl = process.env.MORPHEUS_BASE_URL || 'https://api.mor.org/api/v1'
+
+      // Use opencode auth to configure Morpheus as an OpenAI-compatible provider
+      const morpheusAuthResult = await runCommandInSandbox(sandbox, 'sh', [
         '-c',
-        `echo "${process.env.OPENAI_API_KEY}" | opencode auth add openai`,
+        `echo "${process.env.MORPHEUS_API_KEY}" | opencode auth add openai --base-url "${morpheusBaseUrl}"`,
       ])
 
-      if (!openaiAuthResult.success) {
-        console.warn('Failed to configure OpenAI provider, but continuing...')
+      if (!morpheusAuthResult.success) {
+        console.warn('Failed to configure Morpheus provider, but continuing...')
         if (logger) {
-          await logger.info('Failed to configure OpenAI provider, but continuing...')
+          await logger.info('Failed to configure Morpheus provider, but continuing...')
         }
       } else {
-        authSetupCommands.push('OpenAI provider configured')
-      }
-    }
-
-    if (process.env.ANTHROPIC_API_KEY) {
-      console.log('Configuring Anthropic provider...')
-      if (logger) {
-        await logger.info('Configuring Anthropic provider...')
-      }
-
-      // Use opencode auth to configure Anthropic
-      const anthropicAuthResult = await runCommandInSandbox(sandbox, 'sh', [
-        '-c',
-        `echo "${process.env.ANTHROPIC_API_KEY}" | opencode auth add anthropic`,
-      ])
-
-      if (!anthropicAuthResult.success) {
-        console.warn('Failed to configure Anthropic provider, but continuing...')
-        if (logger) {
-          await logger.info('Failed to configure Anthropic provider, but continuing...')
-        }
-      } else {
-        authSetupCommands.push('Anthropic provider configured')
+        authSetupCommands.push('Morpheus provider configured')
       }
     }
 
@@ -302,11 +281,11 @@ EOF`
     // Set up environment variables for the OpenCode execution
     const envVars: Record<string, string> = {}
 
-    if (process.env.OPENAI_API_KEY) {
-      envVars.OPENAI_API_KEY = process.env.OPENAI_API_KEY
-    }
-    if (process.env.ANTHROPIC_API_KEY) {
-      envVars.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
+    if (process.env.MORPHEUS_API_KEY) {
+      envVars.MORPHEUS_API_KEY = process.env.MORPHEUS_API_KEY
+      // Expose as OPENAI_API_KEY since Morpheus is OpenAI-compatible
+      envVars.OPENAI_API_KEY = process.env.MORPHEUS_API_KEY
+      envVars.OPENAI_BASE_URL = process.env.MORPHEUS_BASE_URL || 'https://api.mor.org/api/v1'
     }
 
     // Build environment variables string for shell command

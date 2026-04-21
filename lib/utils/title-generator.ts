@@ -9,8 +9,8 @@ export interface TitleGenerationOptions {
 export async function generateTaskTitle(options: TitleGenerationOptions): Promise<string> {
   const { prompt, repoName, context } = options
 
-  if (!process.env.AI_GATEWAY_API_KEY) {
-    throw new Error('AI_GATEWAY_API_KEY environment variable is required')
+  if (!process.env.MORPHEUS_API_KEY) {
+    throw new Error('MORPHEUS_API_KEY environment variable is required')
   }
 
   // Create the prompt for title generation
@@ -38,7 +38,7 @@ Return ONLY the title, nothing else.`
   try {
     // Generate title using AI SDK 5 with AI Gateway
     const result = await generateText({
-      model: 'openai/gpt-5-nano',
+      model: 'qwen3-235b',
       prompt: systemPrompt,
       temperature: 0.3,
     })

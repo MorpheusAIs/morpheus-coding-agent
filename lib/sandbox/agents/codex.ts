@@ -76,37 +76,19 @@ export async function executeCodexInSandbox(
     }
 
     // Set up authentication - we'll use API key method since we're in a sandbox
-    if (!process.env.AI_GATEWAY_API_KEY) {
+    if (!process.env.MORPHEUS_API_KEY) {
       return {
         success: false,
-        error: 'AI Gateway API key not found. Please set AI_GATEWAY_API_KEY environment variable.',
+        error: 'Morpheus API key not found. Please set MORPHEUS_API_KEY environment variable.',
         cliName: 'codex',
         changesDetected: false,
       }
     }
 
-    // Validate API key format - can be either OpenAI (sk-) or Vercel (vck_)
-    const apiKey = process.env.AI_GATEWAY_API_KEY
-    const isOpenAIKey = apiKey?.startsWith('sk-')
-    const isVercelKey = apiKey?.startsWith('vck_')
-
-    if (!apiKey || (!isOpenAIKey && !isVercelKey)) {
-      const errorMsg = `Invalid API key format. Expected to start with "sk-" (OpenAI) or "vck_" (Vercel), but got: "${apiKey?.substring(0, 15) || 'undefined'}"`
-
-      if (logger) {
-        await logger.error(errorMsg)
-      }
-      return {
-        success: false,
-        error: errorMsg,
-        cliName: 'codex',
-        changesDetected: false,
-      }
-    }
+    const apiKey = process.env.MORPHEUS_API_KEY
 
     if (logger) {
-      const keyType = isVercelKey ? 'Vercel AI Gateway' : 'OpenAI'
-      await logger.info('Using API key for authentication')
+      await logger.info('Using Morpheus API key for authentication')
     }
 
     // According to the official Codex CLI docs, we should use 'exec' for non-interactive execution
@@ -145,42 +127,23 @@ export async function executeCodexInSandbox(
       await logger.info('Codex CLI version test completed')
     }
 
-    // Create configuration file based on API key type
+    // Create configuration file for Morpheus Inference API (OpenAI-compatible)
     // Use selectedModel if provided, otherwise fall back to default
-    const modelToUse = selectedModel || 'openai/gpt-4o'
-    let configToml
-    if (isVercelKey) {
-      // Use Vercel AI Gateway configuration for vck_ keys
-      // Based on the curl example, it uses /chat/completions endpoint, not responses
-      configToml = `model = "${modelToUse}"
-model_provider = "vercel-ai-gateway"
+    const modelToUse = selectedModel || 'qwen3-coder-480b-a35b-instruct'
+    const morpheusBaseUrl = process.env.MORPHEUS_BASE_URL || 'https://api.mor.org/api/v1'
+    let configToml = `model = "${modelToUse}"
+model_provider = "morpheus"
 
-[model_providers.vercel-ai-gateway]
-name = "Vercel AI Gateway"
-base_url = "https://ai-gateway.vercel.sh/v1"
-env_key = "AI_GATEWAY_API_KEY"
+[model_providers.morpheus]
+name = "Morpheus Inference API"
+base_url = "${morpheusBaseUrl}"
+env_key = "MORPHEUS_API_KEY"
 wire_api = "chat"
 
 # Debug settings
 [debug]
 log_requests = true
 `
-    } else {
-      // Use OpenAI direct for sk_ keys
-      configToml = `model = "${modelToUse}"
-model_provider = "openai"
-
-[model_providers.openai]
-name = "OpenAI"
-base_url = "https://api.openai.com/v1"
-env_key = "AI_GATEWAY_API_KEY"
-wire_api = "responses"
-
-# Debug settings
-[debug]
-log_requests = true
-`
-    }
 
     // Add MCP servers configuration if provided
     if (mcpServers && mcpServers.length > 0) {
@@ -296,15 +259,14 @@ url = "${server.baseUrl}"
     await logger.command(logCommand)
     if (logger) {
       await logger.command(logCommand)
-      const providerName = isVercelKey ? 'Vercel AI Gateway' : 'OpenAI API'
       await logger.info(
-        `Executing Codex with model ${modelToUse} via ${providerName} and bypassed sandbox restrictions`,
+        `Executing Codex with model ${modelToUse} via Morpheus Inference API and bypassed sandbox restrictions`,
       )
     }
 
     // Use the same pattern as other working agents (Claude, etc.)
     // Execute with environment variables using sh -c like Claude does
-    const envPrefix = `AI_GATEWAY_API_KEY="${process.env.AI_GATEWAY_API_KEY}" HOME="/home/vercel-sandbox" CI="true"`
+    const envPrefix = `MORPHEUS_API_KEY="${process.env.MORPHEUS_API_KEY}" HOME="/home/vercel-sandbox" CI="true"`
     const fullCommand = `${envPrefix} ${codexCommand} "${instruction}"`
 
     // Use the standard runInProject helper like other agents
