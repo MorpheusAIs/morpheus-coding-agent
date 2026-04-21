@@ -37,7 +37,7 @@ const MORPHEUS_MODELS = [
   { value: 'glm-5', label: 'GLM-5' },
   { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
   { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
-  { value: 'qwen3-235b', label: 'Qwen3 235B' },
+  { value: 'glm-4.7-thinking', label: 'GLM-4.7 Thinking' },
 ]
 
 const AGENT_MODELS = {

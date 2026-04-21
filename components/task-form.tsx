@@ -78,7 +78,7 @@ const AGENT_MODELS = {
     { value: 'glm-5', label: 'GLM-5' },
     { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
     { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
-    { value: 'qwen3-235b', label: 'Qwen3 235B' },
+    { value: 'glm-4.7-thinking', label: 'GLM-4.7 Thinking' },
   ],
   codex: [
     { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
@@ -86,7 +86,7 @@ const AGENT_MODELS = {
     { value: 'glm-5', label: 'GLM-5' },
     { value: 'kimi-k2.5', label: 'Kimi K2.5' },
     { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
-    { value: 'qwen3-235b', label: 'Qwen3 235B' },
+    { value: 'glm-4.7-thinking', label: 'GLM-4.7 Thinking' },
   ],
   copilot: [
     { value: 'qwen3-coder-480b-a35b-instruct', label: 'Qwen3 Coder 480B (default)' },
@@ -116,7 +116,7 @@ const AGENT_MODELS = {
     { value: 'glm-5', label: 'GLM-5' },
     { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
     { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
-    { value: 'qwen3-235b', label: 'Qwen3 235B' },
+    { value: 'glm-4.7-thinking', label: 'GLM-4.7 Thinking' },
   ],
 } as const
 

@@ -39,7 +39,7 @@ Return ONLY the branch name, nothing else.`
   try {
     // Generate branch name using AI SDK 5 with AI Gateway
     const result = await generateText({
-      model: 'qwen3-235b',
+      model: 'glm-4.7-thinking',
       prompt,
       temperature: 0.3,
     })

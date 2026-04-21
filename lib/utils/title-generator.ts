@@ -38,7 +38,7 @@ Return ONLY the title, nothing else.`
   try {
     // Generate title using AI SDK 5 with AI Gateway
     const result = await generateText({
-      model: 'qwen3-235b',
+      model: 'glm-4.7-thinking',
       prompt: systemPrompt,
       temperature: 0.3,
     })

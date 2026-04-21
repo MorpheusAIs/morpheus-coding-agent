@@ -22,7 +22,7 @@ This template uses the [Morpheus Inference API](https://apidocs.mor.org) — an 
 | glm-5 | 200K | Code, reasoning, function calling |
 | arcee-trinity-large-thinking | 256K | Code and reasoning |
 | minimax-m2.5 | 198K | Code and function calling |
-| qwen3-235b | 128K | General purpose |
+| glm-4.7-thinking | 198K | Deep reasoning, function calling |
 
 ## Deploy Your Own
 

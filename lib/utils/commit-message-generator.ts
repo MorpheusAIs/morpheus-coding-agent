@@ -40,7 +40,7 @@ Return ONLY the commit message, nothing else.`
   try {
     // Generate commit message using AI SDK 5 with AI Gateway
     const result = await generateText({
-      model: 'qwen3-235b',
+      model: 'glm-4.7-thinking',
       prompt,
       temperature: 0.3,
     })
