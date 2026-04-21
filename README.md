@@ -20,8 +20,8 @@ This template uses the [Morpheus Inference API](https://apidocs.mor.org) — an 
 | kimi-k2.5 | 256K | Vision, reasoning, code |
 | kimi-k2-thinking | 256K | Deep reasoning |
 | glm-5 | 200K | Code, reasoning, function calling |
-| arcee-trinity-large-thinking | 256K | Code and reasoning |
-| minimax-m2.5 | 198K | Code and function calling |
+| Arcee-Trinity-Large-Thinking | 256K | Code and reasoning |
+| MiniMax-M2.5 | 198K | Code and function calling |
 | glm-4.7-thinking | 198K | Deep reasoning, function calling |
 
 ## Deploy Your Own

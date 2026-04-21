@@ -35,8 +35,8 @@ const MORPHEUS_MODELS = [
   { value: 'kimi-k2.5', label: 'Kimi K2.5' },
   { value: 'kimi-k2-thinking', label: 'Kimi K2 Thinking' },
   { value: 'glm-5', label: 'GLM-5' },
-  { value: 'arcee-trinity-large-thinking', label: 'Arcee Trinity Large' },
-  { value: 'minimax-m2.5', label: 'MiniMax M2.5' },
+  { value: 'Arcee-Trinity-Large-Thinking', label: 'Arcee Trinity Large' },
+  { value: 'MiniMax-M2.5', label: 'MiniMax M2.5' },
   { value: 'glm-4.7-thinking', label: 'GLM-4.7 Thinking' },
 ]
 
